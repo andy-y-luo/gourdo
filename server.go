@@ -63,11 +63,20 @@ func wsServer(ws *websocket.Conn) {
 	}
 }
 
-func main() {
-	go listenGourdo()
+func httpServer() {
 	http.Handle("/", websocket.Handler(wsServer))
 	err := http.ListenAndServe(":8081", nil)
 	if err != nil {
 		panic("ListenAndServe: " + err.Error())
+	}
+}
+
+func main() {
+	go listenGourdo()
+	go httpServer()
+	for {
+		fmt.Scanln()
+		fmt.Println("Sending example packet")
+		b.Send(packet{Op: 0, Data: 1234})
 	}
 }
