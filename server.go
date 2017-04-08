@@ -66,7 +66,7 @@ func wsServer(ws *websocket.Conn) {
 func main() {
 	go listenGourdo()
 	http.Handle("/", websocket.Handler(wsServer))
-	err := http.ListenAndServe(":12345", nil)
+	err := http.ListenAndServe(":8081", nil)
 	if err != nil {
 		panic("ListenAndServe: " + err.Error())
 	}
