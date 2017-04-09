@@ -2,6 +2,8 @@
 <html>
   <head>
     <meta charset="UTF-8">
+    <link ref="stylesheet" href="./style.css">
+
     <title>Hello React</title>
   </head>
   <body>
