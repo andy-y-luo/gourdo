@@ -21,7 +21,7 @@ type packet struct {
 }
 
 func listenGourdo() {
-	l, err := net.Listen("tcp", "localhost:3333")
+	l, err := net.Listen("tcp", "0.0.0.0:3333")
 	if err != nil {
 		fmt.Println("Error listening:", err.Error())
 		os.Exit(1)
@@ -37,17 +37,28 @@ func listenGourdo() {
 		}
 		// Handle connections in a new goroutine.
 		go func() {
-			var p packet
-			err := binary.Read(conn, binary.LittleEndian, &p.Op)
-			if err != nil {
-				fmt.Println("Error getting op: ", err.Error())
-				return
-			}
-			if p.Op == 0 {
-				binary.Read(conn, binary.LittleEndian, &p.Data)
-			}
-			b.Send(p)
+			fmt.Println("New connection.")
 			defer conn.Close()
+			for {
+				var p packet
+				err := binary.Read(conn, binary.LittleEndian, &p.Op)
+				if err != nil {
+					fmt.Println("Error getting op: ", err.Error())
+					return
+				}
+				if p.Op == 0 {
+					err := binary.Read(conn, binary.LittleEndian, &p.Data)
+					if err != nil {
+						fmt.Println("Error reading data: ", err.Error())
+						return
+					}
+					fmt.Println(0, p.Data)
+
+				} else {
+					fmt.Println(p.Op)
+				}
+				b.Send(p)
+			}
 		}()
 	}
 }
